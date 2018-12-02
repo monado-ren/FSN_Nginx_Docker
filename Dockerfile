@@ -1,12 +1,16 @@
 FROM alpine:3.8
 
-LABEL maintainer="lwl12 <docker@lwl12.com>"
+LABEL maintainer="FGHRSH <fghrsh@wxw.moe>"
 
-ENV NGINX_VERSION 1.15.7
-ENV OPENSSL_VERSION 1.1.1
+ENV NGINX_VERSION 1.15.6
+ENV OPENSSL_VERSION 1.1.1a
+ENV LuaJIT_VERSION 2.1.0-beta3
+ENV ngx_devel_kit_VERSION 0.3.0
+ENV lua_nginx_module_VERSION 0.10.13
+ENV LUAJIT_LIB /usr/local/lib
+ENV LUAJIT_INC /usr/local/include/luajit-2.1/
 
-RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
-	&& CONFIG="\
+RUN CONFIG="\
 		--prefix=/etc/nginx \
 		--sbin-path=/usr/sbin/nginx \
 		--modules-path=/usr/lib/nginx/modules \
@@ -52,6 +56,9 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		--with-http_v2_module \
 		--with-http_v2_hpack_enc \
 		--with-openssl=./openssl \
+		--with-ld-opt=-Wl,-rpath,/usr/local/lib/ \
+		--add-module=./ngx_devel_kit-$ngx_devel_kit_VERSION \
+		--add-module=./lua-nginx-module-$lua_nginx_module_VERSION \
 		--add-module=./ngx_brotli \
 		--add-module=./headers-more-nginx-module \
 	" \
@@ -66,27 +73,11 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		zlib-dev \
 		linux-headers \
 		curl \
-		gnupg1 \
 		libxslt-dev \
 		gd-dev \
 		geoip-dev \
 		git \
 	&& curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
-	&& curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz.asc  -o nginx.tar.gz.asc \
-	&& export GNUPGHOME="$(mktemp -d)" \
-	&& found=''; \
-	for server in \
-		ha.pool.sks-keyservers.net \
-		hkp://keyserver.ubuntu.com:80 \
-		hkp://p80.pool.sks-keyservers.net:80 \
-		pgp.mit.edu \
-	; do \
-		echo "Fetching GPG key $GPG_KEYS from $server"; \
-		gpg --keyserver "$server" --keyserver-options timeout=10 --recv-keys "$GPG_KEYS" && found=yes && break; \
-	done; \
-	test -z "$found" && echo >&2 "error: failed to fetch GPG key $GPG_KEYS" && exit 1; \
-	gpg --batch --verify nginx.tar.gz.asc nginx.tar.gz \
-	&& rm -rf "$GNUPGHOME" nginx.tar.gz.asc \
 	&& mkdir -p /usr/src \
 	&& tar -zxC /usr/src -f nginx.tar.gz \
 	&& rm nginx.tar.gz \
@@ -101,9 +92,21 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& rm openssl.gz \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& git clone https://github.com/openresty/headers-more-nginx-module.git \
-	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx.patch | patch -p1 \
 	&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx_strict-sni.patch	| patch -p1 \
+	&& curl http://luajit.org/download/LuaJIT-$LuaJIT_VERSION.zip -o LuaJIT.zip \
+	&& unzip LuaJIT.zip \
+	&& rm LuaJIT.zip \
+	&& cd LuaJIT-$LuaJIT_VERSION \
+	&& make \
+	&& make install \
+	&& cd /usr/src/nginx-$NGINX_VERSION \
+	&& wget https://github.com/simpl/ngx_devel_kit/archive/v$ngx_devel_kit_VERSION.zip \
+	&& unzip v$ngx_devel_kit_VERSION.zip \
+	&& rm v$ngx_devel_kit_VERSION.zip \
+	&& wget https://github.com/openresty/lua-nginx-module/archive/v$lua_nginx_module_VERSION.zip \
+	&& unzip v$lua_nginx_module_VERSION.zip \
+	&& rm v$lua_nginx_module_VERSION.zip \
 	&& ./configure $CONFIG \
 	&& make -j$(getconf _NPROCESSORS_ONLN) \
 	&& make install \
@@ -115,6 +118,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& ln -s ../../usr/lib/nginx/modules /etc/nginx/modules \
 	&& strip /usr/sbin/nginx* \
 	&& strip /usr/lib/nginx/modules/*.so \
+	&& cd / \
 	&& rm -rf /usr/src/nginx-$NGINX_VERSION \
 	\
 	# xBring in gettext so we can get `envsubst`, then throw
@@ -125,7 +129,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& mv /usr/bin/envsubst /tmp/ \
 	\
 	&& runDeps="$( \
-		scanelf --needed --nobanner --format '%n#p' /usr/sbin/nginx /usr/lib/nginx/modules/*.so /tmp/envsubst \
+		scanelf --needed --nobanner --format '%n#p' /usr/sbin/nginx /usr/lib/nginx/modules/*.so /usr/local/lib/libluajit*.so /tmp/envsubst \
 			| tr ',' '\n' \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
