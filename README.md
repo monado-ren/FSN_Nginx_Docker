@@ -1,1 +1,0 @@
-# LFS-Docker-Nginx
