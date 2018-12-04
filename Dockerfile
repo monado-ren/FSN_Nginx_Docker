@@ -180,9 +180,9 @@ COPY conf/* /etc/nginx/
 COPY verynginx.zip /opt/verynginx/
 
 RUN cd /opt/verynginx/ \
-    && unzip verynginx.zip \
-    && rm verynginx.zip \
-    && chmod -R 777 verynginx/configs
+	&& unzip verynginx.zip \
+	&& rm verynginx.zip \
+	&& chmod -R 777 verynginx/configs
 
 EXPOSE 80 443
 
