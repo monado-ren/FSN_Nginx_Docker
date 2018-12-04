@@ -47,9 +47,8 @@ docker run -d --restart always \
  fghrsh/fsn_verynginx_docker
  ```
  
- - 建议修改
+ - 参数说明
    - `/etc/localtime` 用于同步 宿主机 时区设置
-   - 编辑 `nginx.conf` 内 `more_set_headers 'Server: $hostname/FS5.online';`
    - `docker run --link portainer` 连接到 portainer 容器（视情况修改，无需要请去除
 
 ### nginx.vh.default.conf
