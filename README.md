@@ -59,7 +59,7 @@ server {
     listen 80;
     listen 443 ssl http2;
     
-    #this line shoud be include in every server block
+    # this line shoud be include in every server block
     include /opt/verynginx/verynginx/nginx_conf/in_server_block.conf;
     
     server_name example.com;
