@@ -18,12 +18,11 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
   - `/data/wwwroot/example.com/conf/nginx.conf` - 网站配置文件
 
 ```shell
-docker run -d --name nginx --restart always \
- -p 80:80 -p 443:443 -h $(hostname) \
+docker run -d --restart always \
+ -p 80:80 -p 443:443 --name nginx \
  -v /data/wwwroot:/data/wwwroot \
  -v /data/wwwlogs:/data/wwwlogs \
  -v /opt/ssl:/run/secrets:ro \
- -v /etc/localtime:/etc/localtime:ro \
  fghrsh/fsn_verynginx_docker
  ```
 
