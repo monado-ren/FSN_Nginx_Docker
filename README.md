@@ -12,13 +12,13 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
 ### 举个栗子
 
 - Hello World
-  - `/opt/ssl/example.com.crt()` - 存放证书
+  - `/opt/ssl/example.com.crt(key)` - 存放证书
   - `/data/wwwroot/example.com/web/` - 网站根目录
   - `/data/wwwlogs/example.com-xxx.log` - 网站日志记录
   - `/data/wwwroot/example.com/conf/nginx.conf` - 网站配置文件
 
 ```shell
- docker run -d --name nginx --restart always \
+docker run -d --name nginx --restart always \
  -p 80:80 -p 443:443 -h $(hostname) \
  -v /data/wwwroot:/data/wwwroot \
  -v /data/wwwlogs:/data/wwwlogs \
@@ -35,7 +35,7 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
   - `vim /root/docker_data/nginx/nginx.conf` 编辑 nginx.conf
 
 ```shell
- docker run -d --restart always \
+docker run -d --restart always \
  -p 80:80 -p 443:443 --name nginx \
  -h $(hostname) --link portainer \
  -v /data/wwwroot:/data/wwwroot \
@@ -51,6 +51,46 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
    - `/etc/localtime` 用于同步 宿主机 时区设置
    - 编辑 `nginx.conf` 内 `more_set_headers 'Server: $hostname/FS5.online';`
    - `docker run --link portainer` 连接到 portainer 容器（视情况修改，无需要请去除
+
+### nginx.vh.default.conf
+
+```
+server {
+    listen 80;
+    listen 443 ssl http2;
+    
+    #this line shoud be include in every server block
+    include /opt/verynginx/verynginx/nginx_conf/in_server_block.conf;
+    
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_session_timeout 1d;
+    ssl_session_tickets on;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers [TLS13+AESGCM+AES128|TLS13+AESGCM+AES256|TLS13+CHACHA20]:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES;
+    ssl_session_cache builtin:1000 shared:SSL:10m;
+    resolver 8.8.8.8 8.8.4.4 223.5.5.5 valid=300s;
+    resolver_timeout 5s;
+    ssl_certificate /run/secrets/example.com.ecc.crt;
+    ssl_certificate_key /run/secrets/example.com.ecc.key;
+    
+    server_name example.com;
+    root /data/wwwroot/example.com/web;
+    index index.html index.htm index.php;
+    
+    location ~ \.php$ {
+        fastcgi_pass   unix:/data/wwwroot/example.com/tmp/php-cgi.sock;
+        fastcgi_index  index.php;
+        fastcgi_param  DOCUMENT_ROOT   /data/wwwroot/example.com/web;
+        fastcgi_param  SCRIPT_FILENAME /data/wwwroot/example.com/web$fastcgi_script_name;
+        include fastcgi.conf;
+    }
+    
+    access_log /data/wwwlogs/example.com-access.log main;
+    error_log /data/wwwlogs/example.com-error.log crit;
+}
+```
 
 　
 ## Thanks
