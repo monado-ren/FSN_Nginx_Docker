@@ -79,13 +79,55 @@ server {
     root /data/wwwroot/example.com/web;
     index index.html index.htm index.php;
     
+    # PHP-FPM
     location ~ \.php$ {
         fastcgi_pass   unix:/data/wwwroot/example.com/tmp/php-cgi.sock;
         fastcgi_index  index.php;
         fastcgi_param  DOCUMENT_ROOT   /data/wwwroot/example.com/web;
         fastcgi_param  SCRIPT_FILENAME /data/wwwroot/example.com/web$fastcgi_script_name;
+        fastcgi_connect_timeout 300;
+        fastcgi_send_timeout 300;
+        fastcgi_read_timeout 300;
+        fastcgi_buffer_size 64k;
+        fastcgi_buffers 4 64k;
+        fastcgi_busy_buffers_size 128k;
+        fastcgi_temp_file_write_size 128k;
         include fastcgi.conf;
     }
+    
+    # Gzip Compression
+    gzip on;
+    gzip_buffers 16 8k;
+    gzip_comp_level 6;
+    gzip_http_version 1.1;
+    gzip_min_length 256;
+    gzip_proxied any;
+    gzip_vary on;
+    gzip_types
+        text/xml application/xml application/atom+xml application/rss+xml application/xhtml+xml image/svg+xml
+        text/javascript application/javascript application/x-javascript
+        text/x-json application/json application/x-web-app-manifest+json
+        text/css text/plain text/x-component
+        font/opentype application/x-font-ttf application/vnd.ms-fontobject
+        image/x-icon;
+    gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+    
+    # Brotli Compression
+    brotli             on;
+    brotli_comp_level  6;
+    brotli_types
+        text/xml application/xml application/atom+xml application/rss+xml application/xhtml+xml image/svg+xml
+        text/javascript application/javascript application/x-javascript
+        text/x-json application/json application/x-web-app-manifest+json
+        text/css text/plain text/x-component
+        font/opentype application/x-font-ttf application/vnd.ms-fontobject
+        image/x-icon;
+
+    # If you have a lot of static files to serve through Nginx then caching of the files' metadata (not the actual files' contents) can save some latency.
+    open_file_cache max=1000 inactive=20s;
+    open_file_cache_valid 30s;
+    open_file_cache_min_uses 2;
+    open_file_cache_errors on;
     
     access_log /data/wwwlogs/example.com-access.log main;
     error_log /data/wwwlogs/example.com-error.log crit;
