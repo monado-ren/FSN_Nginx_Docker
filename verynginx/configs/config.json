@@ -2,33 +2,44 @@
   "browser_verify_rule": [],
   "filter_rule": [
     {
-      "enable": false,
-      "action": "accept",
-      "matcher": "localhost"
+      "enable": true,
+      "matcher": "ngx_lua_waf/wafconf/whiteurl",
+      "action": "accept"
     },
     {
       "enable": true,
-      "action": "block",
       "code": "403",
-      "matcher": "attack_sql_0"
+      "matcher": "ngx_lua_waf/wafconf/args",
+      "custom_response": false,
+      "action": "block"
     },
     {
       "enable": true,
-      "action": "block",
       "code": "403",
-      "matcher": "attack_backup_0"
+      "matcher": "ngx_lua_waf/wafconf/cookie",
+      "custom_response": false,
+      "action": "block"
     },
     {
       "enable": true,
-      "action": "block",
       "code": "403",
-      "matcher": "attack_scan_0"
+      "matcher": "ngx_lua_waf/wafconf/post",
+      "custom_response": false,
+      "action": "block"
     },
     {
       "enable": true,
-      "action": "block",
       "code": "403",
-      "matcher": "attack_code_0"
+      "matcher": "ngx_lua_waf/wafconf/url",
+      "custom_response": false,
+      "action": "block"
+    },
+    {
+      "enable": true,
+      "code": "403",
+      "matcher": "ngx_lua_waf/wafconf/user-agent",
+      "custom_response": false,
+      "action": "block"
     }
   ],
   "readonly": false,
@@ -49,30 +60,48 @@
   "summary_with_host": true,
   "scheme_lock_enable": false,
   "matcher": {
-    "attack_scan_0": {
-      "UserAgent": {
-        "value": "(nmap|w3af|netsparker|nikto|fimap|wget)",
-        "operator": "≈"
+    "ngx_lua_waf/wafconf/post": {
+      "Method": {
+        "operator": "=",
+        "value": "POST"
+      },
+      "Header": {
+        "name_operator": "*",
+        "operator": "≈",
+        "value": "select.+(from|limit) (?:(union(.*?)select)) having|rongjitest sleep\\((\\s*)(\\d*)(\\s*)\\) benchmark\\((.*)\\,(.*)\\) base64_decode\\( (?:from\\W+information_schema\\W) (?:(?:current_)user|database|schema|connection_id)\\s*\\( (?:etc\\/\\W*passwd) into(\\s+)+(?:dump|out)file\\s* group\\s+by.+\\( xwork.MethodAccessor (?:define|eval|file_get_contents|include|require|require_once|shell_exec|phpinfo|system|passthru|preg_\\w+|execute|echo|print|print_r|var_dump|(fp)open|alert|showmodaldialog)\\( xwork\\.MethodAccessor (gopher|doc|php|glob|file|phar|zlib|ftp|ldap|dict|ogg|data)\\:\\/ java\\.lang \\$_(GET|post|cookie|files|session|env|phplib|GLOBALS|SERVER)\\[ \\<(iframe|script|body|img|layer|div|meta|style|base|object|input) (onmouseover|onerror|onload)\\="
       }
     },
-    "attack_code_0": {
+    "ngx_lua_waf/wafconf/url": {
       "URI": {
-        "value": "\\.(git|svn|\\.)",
-        "operator": "≈"
+        "operator": "≈",
+        "value": "\\.(svn|htaccess|bash_history)|\\.(bak|inc|old|mdb|sql|backup|java|class)$|(vhost|bbs|host|wwwroot|www|site|root|hytop|flashfxp).*\\.rar|(phpmyadmin|jmx-console|jmxinvokerservlet)|java\\.lang|/(attachments|upimg|images|css|uploadfiles|html|uploads|templets|static|template|data|inc|forumdata|upload|includes|cache|avatar)/(\\\\w+).(php|jsp)"
+      }
+    },
+    "ngx_lua_waf/wafconf/user-agent": {
+      "UserAgent": {
+        "operator": "≈",
+        "value": "(HTTrack|harvest|audit|dirbuster|pangolin|nmap|sqln|-scan|hydra|Parser|libwww|BBBike|sqlmap|w3af|owasp|Nikto|fimap|havij|PycURL|zmeu|BabyKrokodil|netsparker|httperf|bench| SF/)"
+      }
+    },
+    "ngx_lua_waf/wafconf/args": {
+      "Args": {
+        "name_operator": "*",
+        "operator": "≈",
+        "value": "\\.\\./|\\:\\$|\\$\\{|select.+(from|limit)|(?:(union(.*?)select))|having|rongjitest|sleep\\((\\s*)(\\d*)(\\s*)\\)|benchmark\\((.*)\\,(.*)\\)|base64_decode\\(|(?:from\\W+information_schema\\W)|(?:(?:current_)user|database|schema|connection_id)\\s*\\(|(?:etc\\/\\W*passwd)|into(\\s+)+(?:dump|out)file\\s*|group\\s+by.+\\(|xwork.MethodAccessor|(?:define|eval|file_get_contents|include|require|require_once|shell_exec|phpinfo|system|passthru|preg_\\w+|execute|echo|print|print_r|var_dump|(fp)open|alert|showmodaldialog)\\(|xwork\\.MethodAccessor|(gopher|doc|php|glob|file|phar|zlib|ftp|ldap|dict|ogg|data)\\:\\/|java\\.lang|\\$_(GET|post|cookie|files|session|env|phplib|GLOBALS|SERVER)\\[|\\<(iframe|script|body|img|layer|div|meta|style|base|object|input)|(onmouseover|onerror|onload)\\="
       }
     },
     "all_request": {},
-    "attack_backup_0": {
-      "URI": {
-        "value": "\\.(htaccess|bash_history|ssh|sql)$",
-        "operator": "≈"
+    "ngx_lua_waf/wafconf/cookie": {
+      "Cookie": {
+        "name_operator": "*",
+        "operator": "≈",
+        "value": "\\.\\./|\\:\\$|\\$\\{|select.+(from|limit)|(?:(union(.*?)select))|having|rongjitest|sleep\\((\\s*)(\\d*)(\\s*)\\)|benchmark\\((.*)\\,(.*)\\)|base64_decode\\(|(?:from\\W+information_schema\\W)|(?:(?:current_)user|database|schema|connection_id)\\s*\\(|(?:etc\\/\\W*passwd)|into(\\s+)+(?:dump|out)file\\s*|group\\s+by.+\\(|xwork.MethodAccessor|(?:define|eval|file_get_contents|include|require|require_once|shell_exec|phpinfo|system|passthru|preg_\\w+|execute|echo|print|print_r|var_dump|(fp)open|alert|showmodaldialog)\\(|xwork\\.MethodAccessor|(gopher|doc|php|glob|file|phar|zlib|ftp|ldap|dict|ogg|data)\\:\\/|java\\.lang|\\$_(GET|post|cookie|files|session|env|phplib|GLOBALS|SERVER)\\["
       }
     },
-    "attack_sql_0": {
-      "Args": {
-        "operator": "≈",
-        "name_operator": "*",
-        "value": "select.*from"
+    "ngx_lua_waf/wafconf/whiteurl": {
+      "URI": {
+        "operator": "=",
+        "value": "/123/"
       }
     }
   },
