@@ -99,9 +99,9 @@
       }
     },
     "ngx_lua_waf/wafconf/whiteurl": {
-      "URI": {
+      "IP": {
         "operator": "=",
-        "value": "/123/"
+        "value": "127.0.0.1"
       }
     }
   },
