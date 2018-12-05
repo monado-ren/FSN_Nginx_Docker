@@ -27,11 +27,11 @@ docker run -d --restart always \
  ```
 
 - Advanced Setting
-  - `mkdir -p /root/docker_data/nginx/` 创建存放配置的目录，可自行修改
+  - `mkdir -p /root/docker_data/nginx/` - 创建存放配置的目录，可自行修改
   - `curl -fSL https://raw.githubusercontent.com/fghrsh/FSN_VeryNginx_Docker/master/conf/nginx.conf > /root/docker_data/nginx/nginx.conf`
-  - `touch /root/docker_data/nginx/verynginx.json`
+  - `curl -fSL https://raw.githubusercontent.com/fghrsh/FSN_VeryNginx_Docker/master/verynginx/configs/config.json > /root/docker_data/nginx/verynginx.json`
   - `chmod 777 /root/docker_data/nginx/verynginx.json`
-  - `vim /root/docker_data/nginx/nginx.conf` 编辑 nginx.conf
+  - `vim /root/docker_data/nginx/nginx.conf` - 编辑 nginx.conf
 
 ```shell
 docker run -d --restart always \
@@ -47,10 +47,10 @@ docker run -d --restart always \
  ```
  
  - 参数说明
-   - `/etc/localtime` 用于同步 宿主机 时区设置
-   - `docker run --link portainer` 连接到 portainer 容器（视情况修改，无需要请去除
+   - `/etc/localtime` - 用于同步 宿主机 时区设置
+   - `docker run --link portainer` - 连接到 portainer 容器（视情况修改，无需要请去除
 
-### nginx.vh.default.conf
+### nginx.vhost.default.conf
 
 ```
 server {
@@ -83,9 +83,9 @@ server {
 ## Thanks
 > (๑´ㅁ`) 都看到这了，点个 Star 吧 ~
 
-[docker-nginx / @nginxinc][1]  
-[LFS-Docker-Nginx / ©lwl12][2]  
-[VeryNginx / ©alexazhou / LGPL-3.0][3]  
+- [docker-nginx / @nginxinc][1]  
+- [LFS-Docker-Nginx / ©lwl12][2]  
+- [VeryNginx / ©alexazhou / LGPL-3.0][3]  
 
   [1]: https://github.com/nginxinc/docker-nginx "Official NGINX Dockerfiles"
   [2]: https://github.com/lwl12/LFS-Docker-Nginx "LWL Gen3 Server Infrastructure - Nginx"

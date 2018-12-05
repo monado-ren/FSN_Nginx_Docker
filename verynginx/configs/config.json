@@ -1,0 +1,96 @@
+{
+  "browser_verify_rule": [],
+  "filter_rule": [
+    {
+      "enable": false,
+      "action": "accept",
+      "matcher": "localhost"
+    },
+    {
+      "enable": true,
+      "action": "block",
+      "code": "403",
+      "matcher": "attack_sql_0"
+    },
+    {
+      "enable": true,
+      "action": "block",
+      "code": "403",
+      "matcher": "attack_backup_0"
+    },
+    {
+      "enable": true,
+      "action": "block",
+      "code": "403",
+      "matcher": "attack_scan_0"
+    },
+    {
+      "enable": true,
+      "action": "block",
+      "code": "403",
+      "matcher": "attack_code_0"
+    }
+  ],
+  "readonly": false,
+  "static_file_rule": [],
+  "proxy_pass_rule": [],
+  "summary_request_enable": true,
+  "summary_group_persistent_enable": true,
+  "base_uri": "/verynginx",
+  "dashboard_host": "",
+  "response": {},
+  "frequency_limit_enable": false,
+  "uri_rewrite_rule": [],
+  "cookie_prefix": "fsn_verynginx",
+  "filter_enable": true,
+  "browser_verify_enable": false,
+  "scheme_lock_rule": [],
+  "frequency_limit_rule": [],
+  "summary_with_host": true,
+  "scheme_lock_enable": false,
+  "matcher": {
+    "attack_scan_0": {
+      "UserAgent": {
+        "value": "(nmap|w3af|netsparker|nikto|fimap|wget)",
+        "operator": "≈"
+      }
+    },
+    "attack_code_0": {
+      "URI": {
+        "value": "\\.(git|svn|\\.)",
+        "operator": "≈"
+      }
+    },
+    "all_request": {},
+    "attack_backup_0": {
+      "URI": {
+        "value": "\\.(htaccess|bash_history|ssh|sql)$",
+        "operator": "≈"
+      }
+    },
+    "attack_sql_0": {
+      "Args": {
+        "operator": "≈",
+        "name_operator": "*",
+        "value": "select.*from"
+      }
+    }
+  },
+  "summary_temporary_period": 60,
+  "static_file_enable": false,
+  "summary_group_temporary_enable": true,
+  "backend_upstream": {},
+  "redirect_enable": false,
+  "uri_rewrite_enable": false,
+  "admin": [
+    {
+      "enable": true,
+      "user": "verynginx",
+      "password": "verynginx"
+    }
+  ],
+  "summary_collect_rule": [],
+  "proxy_pass_enable": false,
+  "config_version": "0.36",
+  "redirect_rule": []
+}
