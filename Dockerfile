@@ -179,7 +179,7 @@ COPY conf/ /etc/nginx/
 
 COPY verynginx/ /opt/verynginx/verynginx/
 
-RUN chmod -R 777 /opt/verynginx/verynginx/configs/config.json
+RUN chmod -R 777 /opt/verynginx/verynginx/configs/
 
 EXPOSE 80 443
 
