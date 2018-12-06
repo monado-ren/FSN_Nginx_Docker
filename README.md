@@ -36,19 +36,18 @@ docker run -d --restart always \
 ```shell
 docker run -d --restart always \
  -p 80:80 -p 443:443 --name nginx \
- -h $(hostname) --link portainer \
  -v /data/wwwroot:/data/wwwroot \
  -v /data/wwwlogs:/data/wwwlogs \
  -v /opt/ssl:/run/secrets:ro \
  -v /etc/localtime:/etc/localtime:ro \
- -v /root/docker_data/nginx/nginx.conf:/etc/nginx/nginx.conf \
+ -v /root/docker_data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
  -v /root/docker_data/nginx/verynginx.json:/opt/verynginx/verynginx/configs/config.json \
- fghrsh/fsn_verynginx
+ --network fsn fghrsh/fsn_verynginx
  ```
  
  - 参数说明
    - `/etc/localtime` - 用于同步 宿主机 时区设置
-   - `docker run --link portainer` - 连接到 portainer 容器（视情况修改，无需要请去除
+   - `docker run --network fsn` - 接入 fsn 网络（视情况修改，不需要请去除
 
 ### nginx.vhost.default.conf
 
