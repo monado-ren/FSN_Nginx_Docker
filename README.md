@@ -47,6 +47,7 @@ docker run -d --restart always \
  
  - 参数说明
    - `/etc/localtime` - 用于同步 宿主机 时区设置
+   - `docker network create fsn` - 创建 fsn 网络，用于容器间连接
    - `docker run --network fsn` - 接入 fsn 网络（视情况修改，不需要请去除
 
 ### nginx.vhost.default.conf
