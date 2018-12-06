@@ -66,7 +66,7 @@ server {
     ssl_certificate_key /run/secrets/example.com.ecc.key;
     
     location ~ \.php$ {
-        fastcgi_pass   unix:/data/wwwroot/example.com/tmp/php-cgi.sock;
+        fastcgi_pass   php-example:9000;
         fastcgi_index  index.php;
         fastcgi_param  DOCUMENT_ROOT   /data/wwwroot/example.com/web;
         fastcgi_param  SCRIPT_FILENAME /data/wwwroot/example.com/web$fastcgi_script_name;
