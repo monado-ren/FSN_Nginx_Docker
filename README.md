@@ -23,7 +23,7 @@ docker run -d --restart always \
  -v /data/wwwroot:/data/wwwroot \
  -v /data/wwwlogs:/data/wwwlogs \
  -v /opt/ssl:/run/secrets:ro \
- fghrsh/fsn_verynginx
+ fghrsh/fsn_nginx:verynginx
  ```
 
 - Advanced Setting
@@ -42,7 +42,7 @@ docker run -d --restart always \
  -v /etc/localtime:/etc/localtime:ro \
  -v /root/docker_data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
  -v /root/docker_data/nginx/verynginx.json:/opt/verynginx/verynginx/configs/config.json \
- --network fsn fghrsh/fsn_verynginx
+ --network fsn fghrsh/fsn_nginx:verynginx
  ```
  
  - 参数说明
