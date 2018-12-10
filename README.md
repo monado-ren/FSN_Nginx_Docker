@@ -13,7 +13,7 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
 
 - Hello World
   - `/root/docker_data/nginx/ssl/example.com.crt(key)` - 存放证书
-  - `/data/wwwroot/example.com/web/` - 网站根目录
+  - `/data/wwwroot/example.com` - 网站根目录
   - `/data/wwwlogs/example.com-xxx.log` - 网站日志记录
   - `/data/wwwroot/example.com/conf/nginx.conf` - 网站配置文件
 
@@ -41,7 +41,8 @@ docker run -d --restart always \
  -v /etc/localtime:/etc/localtime:ro \
  -v /root/docker_data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
  -v /root/docker_data/nginx/ssl:/etc/nginx/ssl:ro \
- -v /root/docker_data/nginx/verynginx.json:/opt/verynginx/verynginx/configs/config.json \
+ -v /root/docker_data/nginx/vhosts:/etc/nginx/vhosts:ro \
+ -v /root/docker_data/nginx/verynginx.json:/opt/verynginx/configs/config.json \
  --network fsn fghrsh/fsn_nginx:verynginx
  ```
  
@@ -61,7 +62,7 @@ server {
     include /opt/verynginx/nginx_conf/in_server_block.conf;
     
     server_name example.com;
-    root /data/wwwroot/example.com/web;
+    root /data/wwwroot/example.com;
     index index.html index.htm index.php;
     ssl_certificate /etc/nginx/ssl/example.com.crt;
     ssl_certificate_key /etc/nginx/ssl/example.com.key;
