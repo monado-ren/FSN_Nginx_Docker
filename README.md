@@ -70,8 +70,8 @@ server {
     location ~ \.php$ {
         fastcgi_pass   php-example:9000;
         fastcgi_index  index.php;
-        fastcgi_param  DOCUMENT_ROOT   /data/wwwroot/example.com/web;
-        fastcgi_param  SCRIPT_FILENAME /data/wwwroot/example.com/web$fastcgi_script_name;
+        fastcgi_param  DOCUMENT_ROOT   /data/wwwroot/example.com;
+        fastcgi_param  SCRIPT_FILENAME /data/wwwroot/example.com$fastcgi_script_name;
         include fastcgi.conf;
     }
     
