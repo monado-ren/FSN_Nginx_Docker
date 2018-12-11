@@ -179,8 +179,6 @@ COPY conf/ /etc/nginx/
 
 COPY verynginx/ /opt/verynginx/
 
-RUN chown -R nginx:nginx /opt/verynginx/configs/
-
 EXPOSE 80 443
 
 STOPSIGNAL SIGTERM
