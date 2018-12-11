@@ -177,9 +177,9 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 
 COPY conf/ /etc/nginx/
 
-COPY verynginx/ /opt/verynginx/verynginx/
+COPY verynginx/ /opt/verynginx/
 
-RUN chmod -R 777 /opt/verynginx/verynginx/configs/
+RUN chown -R nginx:nginx /opt/verynginx/configs/
 
 EXPOSE 80 443
 

@@ -12,8 +12,8 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
 ### 举个栗子
 
 - Hello World
-  - `/opt/ssl/example.com.crt(key)` - 存放证书
-  - `/data/wwwroot/example.com/web/` - 网站根目录
+  - `/root/docker_data/nginx/ssl/example.com.crt(key)` - 存放证书
+  - `/data/wwwroot/example.com` - 网站根目录
   - `/data/wwwlogs/example.com-xxx.log` - 网站日志记录
   - `/data/wwwroot/example.com/conf/nginx.conf` - 网站配置文件
 
@@ -22,7 +22,7 @@ docker run -d --restart always \
  -p 80:80 -p 443:443 --name nginx \
  -v /data/wwwroot:/data/wwwroot \
  -v /data/wwwlogs:/data/wwwlogs \
- -v /opt/ssl:/run/secrets:ro \
+ -v /root/docker_data/nginx/ssl:/etc/nginx/ssl:ro \
  fghrsh/fsn_nginx:verynginx
  ```
 
@@ -38,10 +38,11 @@ docker run -d --restart always \
  -p 80:80 -p 443:443 --name nginx \
  -v /data/wwwroot:/data/wwwroot \
  -v /data/wwwlogs:/data/wwwlogs \
- -v /opt/ssl:/run/secrets:ro \
  -v /etc/localtime:/etc/localtime:ro \
  -v /root/docker_data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
- -v /root/docker_data/nginx/verynginx.json:/opt/verynginx/verynginx/configs/config.json \
+ -v /root/docker_data/nginx/ssl:/etc/nginx/ssl:ro \
+ -v /root/docker_data/nginx/vhosts:/etc/nginx/vhosts:ro \
+ -v /root/docker_data/nginx/verynginx.json:/opt/verynginx/configs/config.json \
  --network fsn fghrsh/fsn_nginx:verynginx
  ```
  
@@ -58,13 +59,13 @@ server {
     listen 443 ssl http2;
     
     # this line shoud be include in every server block
-    include /opt/verynginx/verynginx/nginx_conf/in_server_block.conf;
+    include /opt/verynginx/nginx_conf/in_server_block.conf;
     
     server_name example.com;
-    root /data/wwwroot/example.com/web;
+    root /data/wwwroot/example.com;
     index index.html index.htm index.php;
-    ssl_certificate /run/secrets/example.com.ecc.crt;
-    ssl_certificate_key /run/secrets/example.com.ecc.key;
+    ssl_certificate /etc/nginx/ssl/example.com.crt;
+    ssl_certificate_key /etc/nginx/ssl/example.com.key;
     
     location ~ \.php$ {
         fastcgi_pass   php-example:9000;
