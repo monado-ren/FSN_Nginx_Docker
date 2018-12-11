@@ -12,10 +12,10 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
 ### 举个栗子
 
 - Hello World
-  - `/root/docker_data/nginx/ssl/example.com.crt(key)` - 存放证书
   - `/data/wwwroot/example.com` - 网站根目录
   - `/data/wwwlogs/example.com-xxx.log` - 网站日志记录
   - `/data/wwwroot/example.com/conf/nginx.conf` - 网站配置文件
+  - `/root/docker_data/nginx/ssl/example.com.crt(key)` - 存放证书
 
 ```shell
 docker run -d --restart always \
@@ -39,9 +39,9 @@ docker run -d --restart always \
  -v /data/wwwroot:/data/wwwroot \
  -v /data/wwwlogs:/data/wwwlogs \
  -v /etc/localtime:/etc/localtime:ro \
- -v /root/docker_data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
  -v /root/docker_data/nginx/ssl:/etc/nginx/ssl:ro \
  -v /root/docker_data/nginx/vhosts:/etc/nginx/vhosts:ro \
+ -v /root/docker_data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
  -v /root/docker_data/nginx/verynginx.json:/opt/verynginx/configs/config.json \
  --network fsn fghrsh/fsn_nginx:verynginx
  ```
