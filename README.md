@@ -31,7 +31,7 @@ docker run -d --restart always \
   - `mkdir -p /root/docker_data/nginx/` - 创建存放配置的目录，可自行修改
   - `curl -fSL https://raw.githubusercontent.com/fghrsh/FSN_VeryNginx_Docker/master/conf/nginx.conf > /root/docker_data/nginx/nginx.conf`
   - `curl -fSL https://raw.githubusercontent.com/fghrsh/FSN_VeryNginx_Docker/master/verynginx/configs/config.json > /root/docker_data/nginx/verynginx.json`
-  - `setfacl -m u:100:rw /root/docker_data/nginx/verynginx.json`
+  - `setfacl -m u:82:rw /root/docker_data/nginx/verynginx.json`
   - `vim /root/docker_data/nginx/nginx.conf` - 编辑 nginx.conf
 
 ```shell
