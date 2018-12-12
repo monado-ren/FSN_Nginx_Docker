@@ -3,6 +3,7 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
 
 ### 特性
 
+- 启用 Strict-SNI，保护源站 IP 不会暴露证书
 - 基于新版 Nginx 1.15 编译，集成 VeryNginx 脚本
 - 支持 HTTPS 2 / TLS 1.3 / Brotli / Headers More 等
 
