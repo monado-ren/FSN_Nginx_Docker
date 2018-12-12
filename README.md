@@ -3,10 +3,11 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
 
 ### 特性
 
-- 启用 Strict-SNI，保护源站 IP 不被 SSL 暴露
+- 启用 Strict-SNI<sup>1</sup>，保护源站 IP 不被 SSL 暴露
 - 基于新版 Nginx 1.15 编译，集成 VeryNginx 脚本
 - 支持 HTTPS 2 / TLS 1.3 / Brotli / Headers More 等
 
+> #1 如遇 CDN 回源 503 错误，请使用 fsn_nginx/verynginx 镜像
 　
 ## 使用
 
@@ -25,7 +26,7 @@ docker run -d --restart always \
  -v /data/wwwlogs:/data/wwwlogs \
  -v /root/docker_data/nginx/ssl:/etc/nginx/ssl:ro \
  -v /root/docker_data/nginx/vhosts:/etc/nginx/vhosts:ro \
- fghrsh/fsn_nginx:verynginx
+ fghrsh/fsn_nginx:verynginx_strict-sni
  ```
 
 - Advanced Setting
@@ -45,7 +46,7 @@ docker run -d --restart always \
  -v /root/docker_data/nginx/vhosts:/etc/nginx/vhosts:ro \
  -v /root/docker_data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
  -v /root/docker_data/nginx/verynginx.json:/opt/verynginx/configs/config.json \
- --network fsn fghrsh/fsn_nginx:verynginx
+ --network fsn fghrsh/fsn_nginx:verynginx_strict-sni
  ```
  
  - 参数说明
