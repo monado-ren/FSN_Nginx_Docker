@@ -114,12 +114,13 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& mv openssl-$OPENSSL_VERSION openssl \
 	&& rm openssl.gz \
 	&& cd /usr/src/nginx-$NGINX_VERSION/openssl \
-	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-1.1.1a-tls13_draft.patch | patch -p1 \
+	#&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-1.1.1a-tls13_draft.patch | patch -p1 \
 	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-1.1.1a-chacha_draft.patch | patch -p1 \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& git clone https://github.com/openresty/headers-more-nginx-module.git \
 	&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx.patch | patch -p1 \
-	&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx_strict-sni.patch	| patch -p1 \
+	#&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx_strict-sni.patch	| patch -p1 \
+	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni.patch	| patch -p1 \
 	&& curl https://gist.github.com/CarterLi/f6e21d4749984a255edc7b358b44bf58/raw/4a7ad66a9a29ffade34d824549ed663bc4b5ac98/use_openssl_md5_sha1.diff | patch -p1 \
 	&& curl http://luajit.org/download/LuaJIT-$LuaJIT_VERSION.zip -o LuaJIT.zip \
 	&& unzip LuaJIT.zip \
