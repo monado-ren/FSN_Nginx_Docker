@@ -7,7 +7,7 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
 - 基于新版 Nginx 1.15 编译，集成 VeryNginx 脚本
 - 支持 HTTPS 2 / TLS 1.3 / Brotli / Headers More 等
 
-> #1 如遇 CDN 回源 503 错误，请使用 fsn_nginx/verynginx 镜像
+> #1 如遇 CDN 回源 503 错误，请修改 `nginx.conf`: `strict_sni off;`
 　
 ## 使用
 
