@@ -2,7 +2,7 @@ FROM alpine:3.8
 
 LABEL maintainer="FGHRSH <fghrsh@wxw.moe>"
 
-ENV NGINX_VERSION 1.15.7
+ENV NGINX_VERSION 1.15.8
 ENV OPENSSL_VERSION 1.1.1a
 ENV LuaJIT_VERSION 2.1.0-beta3
 ENV ngx_devel_kit_VERSION 0.3.0
