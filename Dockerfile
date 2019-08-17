@@ -1,12 +1,12 @@
-FROM alpine:3.8
+FROM alpine:3.10
 
 LABEL maintainer="FGHRSH <fghrsh@wxw.moe>"
 
-ENV NGINX_VERSION 1.16.0
-ENV OPENSSL_VERSION 1.1.1b
+ENV NGINX_VERSION 1.17.3
+ENV OPENSSL_VERSION 1.1.1c
 ENV LuaJIT_VERSION 2.1.0-beta3
-ENV ngx_devel_kit_VERSION 0.3.0
-ENV lua_nginx_module_VERSION 0.10.13
+ENV ngx_devel_kit_VERSION 0.3.1
+ENV lua_nginx_module_VERSION 0.10.15
 ENV LUAJIT_LIB /usr/local/lib
 ENV LUAJIT_INC /usr/local/include/luajit-2.1/
 
@@ -55,7 +55,6 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		--with-compat \
 		--with-file-aio \
 		--with-http_v2_module \
-		--with-http_v2_hpack_enc \
 		--with-zlib=./zlib-cf \
 		--with-openssl=./openssl \
 		--with-openssl-opt='zlib' \
@@ -114,12 +113,10 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& mv openssl-$OPENSSL_VERSION openssl \
 	&& rm openssl.gz \
 	&& cd /usr/src/nginx-$NGINX_VERSION/openssl \
-	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-1.1.1b-chacha_draft.patch | patch -p1 \
+	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-1.1.1c-chacha_draft.patch | patch -p1 \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& git clone https://github.com/openresty/headers-more-nginx-module.git \
-	&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx.patch | patch -p1 \
-	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni.patch	| patch -p1 \
-	&& curl https://gist.github.com/CarterLi/f6e21d4749984a255edc7b358b44bf58/raw/4a7ad66a9a29ffade34d824549ed663bc4b5ac98/use_openssl_md5_sha1.diff | patch -p1 \
+	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni_1.15.10.patch | patch -p1 \
 	&& curl http://luajit.org/download/LuaJIT-$LuaJIT_VERSION.zip -o LuaJIT.zip \
 	&& unzip LuaJIT.zip \
 	&& rm LuaJIT.zip \
