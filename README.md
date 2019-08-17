@@ -4,10 +4,10 @@ VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
 ### 特性
 
 - 启用 Strict-SNI<sup>1</sup>，保护源站 IP 不被 SSL 暴露
-- 基于新版 Nginx 1.15 编译，集成 VeryNginx 脚本
-- 支持 HTTPS 2 / TLS 1.3 / Brotli / Headers More 等
+- 基于 Nginx 1.17.3 编译，集成 VeryNginx 脚本
+- 支持 HTTP 2 / TLS 1.3 / Brotli / Headers More 等
 
-> #1 如遇 CDN 回源 503 错误，请修改 `nginx.conf`: `strict_sni off;`
+> <sup>1</sup> 如遇 CDN 回源 503 错误，请修改 `nginx.conf`: `strict_sni off;`
 　
 ## 使用
 
@@ -88,8 +88,8 @@ server {
 > (๑´ㅁ`) 都看到这了，点个 Star 吧 ~
 
 - [docker-nginx / @nginxinc][1]  
-- [LFS-Docker-Nginx / ©lwl12][2]  
-- [VeryNginx / ©alexazhou / LGPL-3.0][3]  
+- [LFS-Docker-Nginx / @lwl12][2]  
+- [VeryNginx / @alexazhou / LGPL-3.0][3]  
 
   [1]: https://github.com/nginxinc/docker-nginx "Official NGINX Dockerfiles"
   [2]: https://github.com/lwl12/LFS-Docker-Nginx "LWL Gen3 Server Infrastructure - Nginx"
