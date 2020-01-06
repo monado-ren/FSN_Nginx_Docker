@@ -112,8 +112,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& cd zlib-cf \
 	&& make -f Makefile.in distclean \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
-	&& git clone --recursive https://github.com/cloudflare/quiche quiche \
-	&& cd /usr/src/nginx-$NGINX_VERSION \
+	&& git clone --recursive https://github.com/cloudflare/quiche \
 	&& git clone https://github.com/openresty/headers-more-nginx-module.git \
 	&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx_with_spdy_quic.patch | patch -p1 \
 	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni_1.15.10.patch | patch -p1 \
