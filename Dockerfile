@@ -3,7 +3,6 @@ FROM alpine:3.10
 LABEL maintainer="FGHRSH <fghrsh@wxw.moe>"
 
 ENV NGINX_VERSION 1.17.7
-ENV OPENSSL_VERSION 1.1.1d
 ENV LuaJIT_VERSION 2.1.0-beta3
 ENV ngx_devel_kit_VERSION 0.3.1
 ENV lua_nginx_module_VERSION 0.10.15
@@ -55,8 +54,12 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		--with-compat \
 		--with-file-aio \
 		--with-http_v2_module \
+		--with-http_v3_module \
+		--with-http_spdy_module \
+		--with-http_v2_hpack_enc \
 		--with-zlib=./zlib-cf \
-		--with-openssl=./openssl \
+		--with-openssl=./quiche/deps/boringssl \
+		--with-quiche=./quiche \
 		--with-openssl-opt='zlib' \
 		--with-ld-opt=-Wl,-rpath,/usr/local/lib/ \
 		--add-module=./ngx_devel_kit-$ngx_devel_kit_VERSION \
@@ -108,12 +111,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& cd zlib-cf \
 	&& make -f Makefile.in distclean \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
-	&& curl https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz -o openssl.gz \
-	&& tar -xzf openssl.gz \
-	&& mv openssl-$OPENSSL_VERSION openssl \
-	&& rm openssl.gz \
-	&& cd /usr/src/nginx-$NGINX_VERSION/openssl \
-	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-1.1.1d-chacha_draft.patch | patch -p1 \
+	&& git clone --recursive https://github.com/cloudflare/quiche quiche \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& git clone https://github.com/openresty/headers-more-nginx-module.git \
 	&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx_with_spdy_quic.patch | patch -p1 \
