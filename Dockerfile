@@ -54,14 +54,14 @@ RUN set -ex \
     && curl -fSL https://bitbucket.org/nginx-goodies/nginx-sticky-module-ng/get/master.tar.gz -o nginx-sticky-module-ng.tar.gz \
     && tar -zxC nginx-sticky-module-ng -f nginx-sticky-module-ng.tar.gz --strip 1 \
     && git clone https://github.com/openresty/headers-more-nginx-module.git --depth 1 \
-	&& curl http://luajit.org/download/LuaJIT-$LuaJIT_VERSION.zip -o LuaJIT.zip \
-	&& (unzip LuaJIT.zip; rm LuaJIT.zip; cd LuaJIT-$LuaJIT_VERSION; make -j$(getconf _NPROCESSORS_ONLN); make install) \
-	&& wget https://github.com/simpl/ngx_devel_kit/archive/v$ngx_devel_kit_VERSION.zip \
-	&& (unzip v$ngx_devel_kit_VERSION.zip; rm v$ngx_devel_kit_VERSION.zip) \
-	&& wget https://github.com/openresty/lua-nginx-module/archive/v$lua_nginx_module_VERSION.zip \
-	&& (unzip v$lua_nginx_module_VERSION.zip; rm v$lua_nginx_module_VERSION.zip) \
-	&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx_with_spdy_quic.patch | patch -p1 \
-	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni_1.15.10.patch | patch -p1
+    && curl http://luajit.org/download/LuaJIT-$LuaJIT_VERSION.zip -o LuaJIT.zip \
+    && (unzip LuaJIT.zip; rm LuaJIT.zip; cd LuaJIT-$LuaJIT_VERSION; make -j$(getconf _NPROCESSORS_ONLN); make install) \
+    && wget https://github.com/simpl/ngx_devel_kit/archive/v$ngx_devel_kit_VERSION.zip \
+    && (unzip v$ngx_devel_kit_VERSION.zip; rm v$ngx_devel_kit_VERSION.zip) \
+    && wget https://github.com/openresty/lua-nginx-module/archive/v$lua_nginx_module_VERSION.zip \
+    && (unzip v$lua_nginx_module_VERSION.zip; rm v$lua_nginx_module_VERSION.zip) \
+    && curl https://raw.githubusercontent.com/kn007/patch/master/nginx_with_spdy_quic.patch | patch -p1 \
+    && curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni_1.15.10.patch | patch -p1
 
 RUN cd /usr/src/nginx-$NGINX_VERSION \
     && ./configure \
@@ -109,14 +109,14 @@ RUN cd /usr/src/nginx-$NGINX_VERSION \
         --with-file-aio \
         --with-http_v2_module \
         --with-http_v3_module \
-		--with-http_spdy_module \
-		--with-http_v2_hpack_enc \
+        --with-http_spdy_module \
+        --with-http_v2_hpack_enc \
         --with-zlib=/usr/src/nginx-${NGINX_VERSION}/zlib \
         --add-module=/usr/src/nginx-${NGINX_VERSION}/ngx_brotli \
         --add-module=/usr/src/nginx-${NGINX_VERSION}/nginx-sticky-module-ng \
         --add-module=/usr/src/nginx-${NGINX_VERSION}/headers-more-nginx-module \
-		--add-module=/usr/src/nginx-${NGINX_VERSION}/ngx_devel_kit-$ngx_devel_kit_VERSION \
-		--add-module=/usr/src/nginx-${NGINX_VERSION}/lua-nginx-module-$lua_nginx_module_VERSION \
+        --add-module=/usr/src/nginx-${NGINX_VERSION}/ngx_devel_kit-$ngx_devel_kit_VERSION \
+        --add-module=/usr/src/nginx-${NGINX_VERSION}/lua-nginx-module-$lua_nginx_module_VERSION \
         --with-openssl=/usr/src/nginx-${NGINX_VERSION}/quiche/deps/boringssl \
         --with-quiche=/usr/src/nginx-${NGINX_VERSION}/quiche \
     && make -j$(getconf _NPROCESSORS_ONLN) \
@@ -162,7 +162,7 @@ RUN set -ex \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     && mv /etc/nginx/logrotate /etc/logrotate.d/nginx \
     && chmod 755 /etc/logrotate.d/nginx \
-	&& chown nginx:nginx /opt/verynginx/configs/config.json
+    && chown nginx:nginx /opt/verynginx/configs/config.json
 
 EXPOSE 80 443
 STOPSIGNAL SIGTERM
