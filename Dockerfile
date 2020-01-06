@@ -2,7 +2,7 @@ FROM alpine:3.10
 
 LABEL maintainer="FGHRSH <fghrsh@wxw.moe>"
 
-ENV NGINX_VERSION 1.17.3
+ENV NGINX_VERSION 1.17.7
 ENV OPENSSL_VERSION 1.1.1d
 ENV LuaJIT_VERSION 2.1.0-beta3
 ENV ngx_devel_kit_VERSION 0.3.1
@@ -116,6 +116,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-1.1.1d-chacha_draft.patch | patch -p1 \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& git clone https://github.com/openresty/headers-more-nginx-module.git \
+	&& curl https://raw.githubusercontent.com/kn007/patch/master/nginx_with_spdy_quic.patch | patch -p1 \
 	&& curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni_1.15.10.patch | patch -p1 \
 	&& curl http://luajit.org/download/LuaJIT-$LuaJIT_VERSION.zip -o LuaJIT.zip \
 	&& unzip LuaJIT.zip \
