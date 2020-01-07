@@ -1,10 +1,10 @@
 # FSN VeryNginx Docker
-VeryNginx on Docker with TLS 1.3 / FGHRSH Service Node Infrastructure
+VeryNginx Docker / FGHRSH Service Node Infrastructure
 
 ### 特性
 
 - 启用 Strict-SNI<sup>1</sup>，保护源站 IP 不被 SSL 暴露
-- 基于 Nginx 1.17.3 编译，集成 VeryNginx 脚本
+- 基于 Nginx 1.17.7 编译，集成 VeryNginx 脚本
 - 支持 HTTP 2 / TLS 1.3 / Brotli / Headers More 等
 
 > <sup>1</sup> 如遇 CDN 回源 503 错误，请修改 `nginx.conf`: `strict_sni off;`
@@ -31,8 +31,8 @@ docker run -d --restart always \
 
 - Advanced Setting
   - `mkdir -p /root/docker_data/nginx/` - 创建存放配置的目录，可自行修改
-  - `curl -fSL https://raw.githubusercontent.com/fghrsh/FSN_VeryNginx_Docker/verynginx/conf/nginx.conf > /root/docker_data/nginx/nginx.conf`
-  - `curl -fSL https://raw.githubusercontent.com/fghrsh/FSN_VeryNginx_Docker/verynginx/verynginx/configs/config.json > /root/docker_data/nginx/verynginx.json`
+  - `curl -fSL https://raw.githubusercontent.com/fghrsh/FSN_Nginx_Docker/verynginx/conf/nginx.conf > /root/docker_data/nginx/nginx.conf`
+  - `curl -fSL https://raw.githubusercontent.com/fghrsh/FSN_Nginx_Docker/verynginx/verynginx/configs/config.json > /root/docker_data/nginx/verynginx.json`
   - `setfacl -m u:82:rw /root/docker_data/nginx/verynginx.json`
   - `vim /root/docker_data/nginx/nginx.conf` - 编辑 nginx.conf
 
@@ -52,7 +52,7 @@ docker run -d --restart always \
  - 参数说明
    - `/etc/localtime` - 用于同步 宿主机 时区设置
    - `docker network create fsn` - 创建 fsn 网络，用于容器间连接
-   - `docker run --network fsn` - 接入 fsn 网络（视情况修改，不需要请去除
+   - `docker run --network fsn` - 接入 fsn 网络（视情况修改，不需要可去除
 
 ### nginx.vhost.default.conf
 
@@ -87,10 +87,10 @@ server {
 ## Thanks
 > (๑´ㅁ`) 都看到这了，点个 Star 吧 ~
 
-- [docker-nginx / @nginxinc][1]  
-- [LFS-Docker-Nginx / @lwl12][2]  
-- [VeryNginx / @alexazhou / LGPL-3.0][3]  
+- [VeryNginx / @alexazhou / LGPL-3.0][1]  
+- docker nginx / [@nginxinc][2], [@lwl12][3], [@metowolf][4]  
 
-  [1]: https://github.com/nginxinc/docker-nginx "Official NGINX Dockerfiles"
-  [2]: https://github.com/lwl12/LFS-Docker-Nginx "LWL Gen3 Server Infrastructure - Nginx"
-  [3]: https://github.com/alexazhou/VeryNginx/ "VeryNginx is a very powerful and friendly nginx."
+  [1]: https://github.com/alexazhou/VeryNginx "VeryNginx is a very powerful and friendly nginx."
+  [2]: https://github.com/nginxinc/docker-nginx "Official NGINX Dockerfiles"
+  [3]: https://github.com/lwl12/LFS-Docker-Nginx "LWL Gen3 Server Infrastructure - Nginx"
+  [4]: https://github.com/metowolf/docker-nginx "LEMP (Linux + Nginx + MySQL + PHP)"
