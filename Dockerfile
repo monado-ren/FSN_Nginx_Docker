@@ -3,6 +3,7 @@ FROM rust:1.40-alpine as builder
 LABEL maintainer="FGHRSH <fghrsh@wxw.moe>"
 
 ARG NGINX_VERSION=1.17.7
+ARG OPENSSL_VERSION=1.1.1d
 ARG LuaJIT_VERSION=2.1.0-beta3
 ARG ngx_devel_kit_VERSION=0.3.1
 ARG lua_nginx_module_VERSION=0.10.15
@@ -48,8 +49,9 @@ RUN set -ex \
     && (cd ngx_brotli; git submodule update --init --recursive) \
     && git clone https://github.com/cloudflare/zlib.git --depth 1 \
     && (cd zlib; make -f Makefile.in distclean) \
-    && git clone https://github.com/cloudflare/quiche --depth=1 \
-    && (cd quiche; git submodule update --init) \
+    && curl -fSL https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz -o openssl-${OPENSSL_VERSION}.tar.gz \
+    && tar -xzf openssl-${OPENSSL_VERSION}.tar.gz \
+    && (cd openssl-${OPENSSL_VERSION}; curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-1.1.1d-chacha_draft.patch | patch -p1) \
     && mkdir nginx-sticky-module-ng \
     && curl -fSL https://bitbucket.org/nginx-goodies/nginx-sticky-module-ng/get/master.tar.gz -o nginx-sticky-module-ng.tar.gz \
     && tar -zxC nginx-sticky-module-ng -f nginx-sticky-module-ng.tar.gz --strip 1 \
@@ -60,7 +62,7 @@ RUN set -ex \
     && (unzip v$ngx_devel_kit_VERSION.zip; rm v$ngx_devel_kit_VERSION.zip) \
     && wget https://github.com/openresty/lua-nginx-module/archive/v$lua_nginx_module_VERSION.zip \
     && (unzip v$lua_nginx_module_VERSION.zip; rm v$lua_nginx_module_VERSION.zip) \
-    && curl https://raw.githubusercontent.com/kn007/patch/master/nginx_with_spdy_quic.patch | patch -p1 \
+    && curl https://raw.githubusercontent.com/kn007/patch/master/nginx.patch | patch -p1 \
     && curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni_1.15.10.patch | patch -p1
 
 RUN cd /usr/src/nginx-$NGINX_VERSION \
@@ -108,7 +110,6 @@ RUN cd /usr/src/nginx-$NGINX_VERSION \
         --with-compat \
         --with-file-aio \
         --with-http_v2_module \
-        --with-http_v3_module \
         --with-http_spdy_module \
         --with-http_v2_hpack_enc \
         --with-zlib=/usr/src/nginx-${NGINX_VERSION}/zlib \
@@ -117,8 +118,7 @@ RUN cd /usr/src/nginx-$NGINX_VERSION \
         --add-module=/usr/src/nginx-${NGINX_VERSION}/headers-more-nginx-module \
         --add-module=/usr/src/nginx-${NGINX_VERSION}/ngx_devel_kit-$ngx_devel_kit_VERSION \
         --add-module=/usr/src/nginx-${NGINX_VERSION}/lua-nginx-module-$lua_nginx_module_VERSION \
-        --with-openssl=/usr/src/nginx-${NGINX_VERSION}/quiche/deps/boringssl \
-        --with-quiche=/usr/src/nginx-${NGINX_VERSION}/quiche \
+        --with-openssl=/usr/src/nginx-${NGINX_VERSION}/openssl-${OPENSSL_VERSION} \
     && make -j$(getconf _NPROCESSORS_ONLN) \
     && make install \
     && rm -rf /etc/nginx/html/ \
