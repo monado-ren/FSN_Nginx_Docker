@@ -110,7 +110,6 @@ RUN cd /usr/src/nginx-$NGINX_VERSION \
         --with-compat \
         --with-file-aio \
         --with-http_v2_module \
-        --with-http_spdy_module \
         --with-http_v2_hpack_enc \
         --with-zlib=/usr/src/nginx-${NGINX_VERSION}/zlib \
         --add-module=/usr/src/nginx-${NGINX_VERSION}/ngx_brotli \
